@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-//Контроллер возвращает представление, необходимое для отображения страниц (Буковка V в MVC)
+/**
+ * Controller-class.
+ * Consists of methods that return views for pages display
+ * */
 @Controller
 public class ProductController {
 
@@ -22,14 +24,22 @@ public class ProductController {
         this.productService = service;
     }
 
-    @GetMapping("/")
-    public String products(@RequestParam(name="title", required = false) String title, Model model){
+    /**
+     * @return name of freemarker view file
+     * */
+    @GetMapping("/")//Used to create a web service endpoint
+    public String products(@RequestParam(name="title", required = false) String title,//Annotation used for retrieve request params
+                                                                                    //Attribute: 1.'(name=<param alias>)' or (<param alias>)
+                                                                                    //2.(required=false) for mandatory params
+                                                                                    //3.(defaultValue='example') value will set for field
+                                                                                    //Its possible to pass list of params
+                           Model model){ // interface for transfer data from endpoint to view
         model.addAttribute("productList", productService.list(title));
         return "products";
     }
 
     @GetMapping("/product/{id}")
-    public String productInfo(@PathVariable Long id, Model model) {
+    public String productInfo(@PathVariable Long id, Model model) {//Annotation allows to pass no-named param in URL
         Product product = productService.getById(id);
         model.addAttribute("product", product);
         return "product-info";
